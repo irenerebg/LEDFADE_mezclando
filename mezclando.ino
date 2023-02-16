@@ -9,19 +9,7 @@ MQTT los valores de los tiempos transcurridos
 //IMPORTACIÓN DE MÓDULOS
 
 #include <ArduinoJson.h>
-#include <WiFi.h>
-#include <PubSubClient.h>
 
-//Declaración de constantes necesarias para conectarse al MQTT
-const char* ssid = "sercommBB5621";
-const char* password =  "9746Y8BTSJTMFKMX";
-const char* mqtt_server = "broker.eqmx.io";
-const int port = 1883;
-const char* mqtt_username = "IRENERG";
-const char* mqtt_password = "holahola12_";
-
-WiFiClient esp32Client;
-PubSubClient client(esp32Client);
 
 //Declaración de constantes para el LED
 unsigned int tiempoApagado = 5000;
@@ -31,36 +19,6 @@ int freq = 5000;
 int ledChannel = 0;
 int resolution = 8;
 
-//FUNCIÓN PARA CONECTARSE A LA WIFI
-void wifi() {
-  //Se conecta a la wifi definida al principio
-  WiFi.begin(ssid, password);
-  //mientras se conecta nos manda un mensaje
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(2000);
-    Serial.println("Conectandose a la WiFi...");
-  }
-  //una vez conectado, lo indica
-  Serial.println("Conectado a la red WiFi");
-}
-
-//FUNCIÓN PARA CONECTARSE AL SERVIDOR MQTT
-void mqtt_connect() {
-  while (!client.connected()) {
-    String client_id = "pruebaesp32-";
-    client_id += String(WiFi.macAddress());
-
-    Serial.printf("El cliente %s se está conectando... \n", client_id.c_str());
-    if (client.connect(client_id.c_str(), mqtt_username, mqtt_password)) {
-        Serial.println("Se ha conectado al servidor MQTT");
-    } 
-    else {
-        Serial.print("Error con el estado de cliente ");
-        Serial.println(client.state());
-        delay(2000);
-    }
-  }
-}
 
 //FUNCIÓN PARA ENVIAR UN JSON CON LOS TIEMPOS QUE TENDRÁ EL BUCLE
 void sendjason() {
@@ -78,12 +36,6 @@ void sendjason() {
   Serial.println("Los tiempos de apagado y fade son: ");
   JSONencoder.prettyPrintTo(Serial);
   Serial.println();
-
-  char JSONmessageBuffer[100];
-  JSONencoder.printTo(JSONmessageBuffer, sizeof(JSONmessageBuffer));
-  Serial.println("Enviando mensaje a MQTT..");
-  Serial.println(JSONmessageBuffer);
-
 }
 
 void setup() {
