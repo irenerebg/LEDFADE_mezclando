@@ -33,7 +33,7 @@ int resolution = 8;
 
 //Función callback para recibir los tiempos
 
-/*void callback(char* topic, byte* payload, unsigned int length) {
+void callback(char* topic, byte* payload, unsigned int length) {
  
   Serial.print("Mensaje recibido del topic: ");
   Serial.println(topic);
@@ -47,7 +47,7 @@ int resolution = 8;
   Serial.println("-----------------------");
  
 }
-*/
+
 
 //FUNCIÓN PARA CONECTARSE A LA WIFI
 void wifi() {
@@ -101,21 +101,21 @@ void sendjason() {
   JSONencoder.printTo(JSONmessageBuffer, sizeof(JSONmessageBuffer));
   Serial.println("Enviando mensaje a MQTT..");
   Serial.println(JSONmessageBuffer);
-/*
+
   if (client.publish("tiempoOUTPUT", JSONmessageBuffer) == true) {
     Serial.println("Se ha enviado el mensaje");
   } else {
     Serial.println("Error enviando el mensaje");
   }
-*/
+
 }
 
 void setup() {
   Serial.begin(115200);
-  //wifi();
-  //client.setServer(mqtt_server, port);
-  //client.setCallback(callback);
-  //mqtt_connect();
+  wifi();
+  client.setServer(mqtt_server, port);
+  client.setCallback(callback);
+  mqtt_connect();
   delay(1000);
   sendjason();
   Serial.println("-------------");
